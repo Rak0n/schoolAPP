@@ -87,7 +87,7 @@ custom_html = """
         /* Area contenitore degli oggetti da smistare */
         .items-pool {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
             background-color: #fff9c4;
             border: 4px solid #fbc02d;
             border-radius: 20px;
