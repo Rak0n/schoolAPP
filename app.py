@@ -260,38 +260,95 @@ custom_html = """
         <div class="drop-zone" id="zone-neolitico">
             <div class="character-header">
                 <div class="char-placeholder" style="background: transparent;">
-                    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
-                        <path d="M35 40 Q50 10 65 40 Z" fill="#424242"/>
-                        <circle cx="50" cy="35" r="15" fill="#FFCCBC"/>
-                        <circle cx="45" cy="35" r="2" fill="#000"/>
-                        <circle cx="55" cy="35" r="2" fill="#000"/>
-                        <path d="M45 42 Q50 45 55 42" stroke="#000" stroke-width="1.5" fill="none"/>
-                        <path d="M35 50 L65 50 L70 90 L30 90 Z" fill="#A5D6A7"/>
-                        <path d="M35 50 Q50 60 65 50" stroke="#81C784" stroke-width="2" fill="none"/>
-                        <line x1="35" y1="55" x2="20" y2="70" stroke="#FFCCBC" stroke-width="5" stroke-linecap="round"/>
-                        <line x1="65" y1="55" x2="80" y2="70" stroke="#FFCCBC" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M70 65 Q80 65 85 75 Q90 85 80 85 L70 85 Q60 85 65 75 Z" fill="#D84315"/>
-                    </svg>
-                </div>
-                <h2>Neolitico</h2>
-                <small>Età della pietra nuova</small>
-            </div>
-            <!-- Gli oggetti corretti verranno spostati qui da JS -->
-        </div>
-    </div>
+                   <!-- ==========================================
+     1. NUOVO UOMO DEL PALEOLITICO (Sostituisci il vecchio SVG)
+     ========================================== -->
+<svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+    <!-- Lancia dietro la schiena -->
+    <line x1="20" y1="90" x2="80" y2="20" stroke="#795548" stroke-width="4" stroke-linecap="round"/>
+    <polygon points="75,25 85,15 88,25" fill="#9E9E9E"/>
 
-    <h3 style="color: #666; margin-bottom: 10px;">Scatola degli oggetti (Trascinali su!)</h3>
+    <!-- Corpo e vestito di pelli -->
+    <path d="M 35 90 C 35 60, 40 50, 50 50 C 60 50, 65 60, 65 90 Z" fill="#8D6E63"/>
+    <!-- Macchioline stile leopardo -->
+    <circle cx="45" cy="65" r="3" fill="#4E342E"/>
+    <circle cx="58" cy="75" r="4" fill="#4E342E"/>
+    <circle cx="42" cy="82" r="2.5" fill="#4E342E"/>
+    <circle cx="55" cy="58" r="2" fill="#4E342E"/>
+
+    <!-- Braccia -->
+    <path d="M 38 55 Q 25 70 30 80" stroke="#FFBCA5" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <path d="M 62 55 Q 75 70 70 80" stroke="#FFBCA5" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+    <!-- Testa rotonda -->
+    <circle cx="50" cy="35" r="22" fill="#FFBCA5"/>
     
-    <!-- Zona Oggetti Iniziali -->
-    <div class="items-pool" id="items-pool">
-        
-        <!-- PALEOLITICO: Capanna di pelli -->
-        <div class="draggable-item" draggable="true" id="item_pal_1" data-era="zone-paleolitico">
-            <svg viewBox="0 0 100 100">
-                <path d="M50 10 L20 80 L80 80 Z" fill="#8B4513" stroke="#5C3A21" stroke-width="4"/>
-                <path d="M50 10 L50 80" stroke="#5C3A21" stroke-width="2" stroke-dasharray="4,4"/>
-                <path d="M40 80 L50 60 L60 80 Z" fill="#3E2723"/>
-            </svg>
+    <!-- Capelli arruffati -->
+    <path d="M 25 35 C 20 15, 80 15, 75 35 C 80 20, 50 5, 25 35 Z" fill="#5D4037"/>
+    <polygon points="30,25 35,35 40,22 50,32 55,20 65,32 70,25" fill="#4E342E"/>
+
+    <!-- Occhioni grandi e simpatici -->
+    <circle cx="41" cy="35" r="4.5" fill="#212121"/>
+    <circle cx="42" cy="33.5" r="1.5" fill="#FFFFFF"/>
+    <circle cx="59" cy="35" r="4.5" fill="#212121"/>
+    <circle cx="60" cy="33.5" r="1.5" fill="#FFFFFF"/>
+
+    <!-- Guancette rosse -->
+    <ellipse cx="33" cy="40" rx="3.5" ry="2" fill="#FF8A65" opacity="0.7"/>
+    <ellipse cx="67" cy="40" rx="3.5" ry="2" fill="#FF8A65" opacity="0.7"/>
+
+    <!-- Sorrisone -->
+    <path d="M 45 42 Q 50 48 55 42" stroke="#212121" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+</svg>
+
+
+<!-- ==========================================
+     2. NUOVA DONNA DEL NEOLITICO (Sostituisci il vecchio SVG)
+     ========================================== -->
+<svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+    <!-- Corpo e vestito in tessuto -->
+    <path d="M 30 90 C 35 60, 40 50, 50 50 C 60 50, 65 60, 70 90 Z" fill="#A5D6A7"/>
+    
+    <!-- Decorazione del vestito (strisce) -->
+    <path d="M 37 70 Q 50 75 63 70" stroke="#81C784" stroke-width="3" fill="none"/>
+    <path d="M 34 80 Q 50 85 66 80" stroke="#81C784" stroke-width="3" fill="none"/>
+
+    <!-- Braccia -->
+    <path d="M 38 55 Q 20 60 30 75" stroke="#FFCCBC" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M 62 55 Q 80 60 70 75" stroke="#FFCCBC" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+    <!-- Piccolo vasetto in mano -->
+    <ellipse cx="73" cy="73" rx="8" ry="10" fill="#D84315"/>
+    <ellipse cx="73" cy="63" rx="5" ry="2" fill="#BF360C"/>
+    <path d="M 68 63 L 78 63 L 75 68 L 71 68 Z" fill="#D84315"/>
+
+    <!-- Testa rotonda -->
+    <circle cx="50" cy="35" r="20" fill="#FFCCBC"/>
+    
+    <!-- Capelli raccolti (codini/chignon) -->
+    <circle cx="30" cy="45" r="7" fill="#424242"/> 
+    <circle cx="70" cy="45" r="7" fill="#424242"/>
+    <path d="M 28 35 C 30 10, 70 10, 72 35 C 65 20, 35 20, 28 35 Z" fill="#212121"/>
+    
+    <!-- Fascia per capelli colorata -->
+    <path d="M 31 28 Q 50 35 69 28" stroke="#81C784" stroke-width="3" fill="none"/>
+
+    <!-- Occhioni dolci con ciglia -->
+    <circle cx="42" cy="36" r="4" fill="#212121"/>
+    <circle cx="43" cy="34.5" r="1.5" fill="#FFFFFF"/>
+    <line x1="38" y1="34" x2="35" y2="31" stroke="#212121" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <circle cx="58" cy="36" r="4" fill="#212121"/>
+    <circle cx="59" cy="34.5" r="1.5" fill="#FFFFFF"/>
+    <line x1="62" y1="34" x2="65" y2="31" stroke="#212121" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- Guancette rosse -->
+    <ellipse cx="35" cy="41" rx="3.5" ry="2" fill="#FF8A65" opacity="0.7"/>
+    <ellipse cx="65" cy="41" rx="3.5" ry="2" fill="#FF8A65" opacity="0.7"/>
+
+    <!-- Sorriso dolce -->
+    <path d="M 46 43 Q 50 47 54 43" stroke="#212121" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>
             <span>Capanna smontabile</span>
         </div>
 
