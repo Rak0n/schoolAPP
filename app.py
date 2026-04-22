@@ -33,7 +33,7 @@ custom_html = """
             justify-content: space-between;
             width: 100%;
             max-width: 1200px;
-            margin-bottom: 40px;
+            margin-bottom: 15px;
         }
 
         /* Le due zone in cui trascinare gli oggetti */
