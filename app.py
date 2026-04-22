@@ -1,0 +1,300 @@
+import streamlit as st
+import streamlit.components.v1 as components
+
+# Configurazione della pagina Streamlit
+st.set_page_config(page_title="Verifica: Paleolitico e Neolitico", layout="wide")
+
+st.title("🏹 Scopriamo la Preistoria!")
+st.markdown("Trascina gli oggetti e le abitudini nel periodo storico corretto. Aiuta l'uomo del Paleolitico e la donna del Neolitico a ritrovare le loro cose!")
+
+# === IL CUORE DEL GIOCO: HTML, CSS e JS INIETTATI ===
+# Usiamo una stringa multi-linea per contenere tutto il frontend del gioco
+custom_html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+        
+        body {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-board {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 30px;
+        }
+
+        /* Le due zone in cui trascinare gli oggetti */
+        .drop-zone {
+            width: 45%;
+            min-height: 350px;
+            background-color: #ffffff;
+            border: 4px dashed #ccc;
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .drop-zone.dragover {
+            background-color: #e6ffe6;
+            border-color: #4CAF50;
+            transform: scale(1.02);
+        }
+
+        /* Intestazioni delle drop zone (I personaggi) */
+        .character-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            width: 100%;
+        }
+
+        .character-header h2 {
+            color: #333;
+            margin: 10px 0 0 0;
+            font-size: 24px;
+        }
+
+        .char-placeholder {
+            font-size: 50px;
+            background: #f1f1f1;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        /* Area contenitore degli oggetti da smistare */
+        .items-pool {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff9c4;
+            border: 4px solid #fbc02d;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            min-height: 150px;
+        }
+
+        /* Il singolo oggetto trascinabile */
+        .draggable-item {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 10px;
+            width: 120px;
+            text-align: center;
+            cursor: grab;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-5px);
+            border-color: #2196F3;
+        }
+
+        .draggable-item svg {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 8px;
+        }
+
+        .draggable-item span {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.2;
+        }
+
+        .drop-zone .draggable-item {
+            margin: 5px;
+            display: inline-flex;
+            cursor: default;
+            transform: none;
+            border-color: #4CAF50;
+            background-color: #f1f8e9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-board">
+        <!-- Zona Paleolitico -->
+        <div class="drop-zone" id="zone-paleolitico">
+            <div class="character-header">
+                <div class="char-placeholder">🧔🏽‍♂️</div>
+                <h2>Paleolitico</h2>
+                <small>Età della pietra antica</small>
+            </div>
+            <!-- Gli oggetti corretti verranno spostati qui da JS -->
+        </div>
+
+        <!-- Zona Neolitico -->
+        <div class="drop-zone" id="zone-neolitico">
+            <div class="character-header">
+                <div class="char-placeholder">👩🏽‍🦱</div>
+                <h2>Neolitico</h2>
+                <small>Età della pietra nuova</small>
+            </div>
+            <!-- Gli oggetti corretti verranno spostati qui da JS -->
+        </div>
+    </div>
+
+    <h3 style="color: #666; margin-bottom: 10px;">Scatola degli oggetti (Trascinali su!)</h3>
+    
+    <!-- Zona Oggetti Iniziali -->
+    <div class="items-pool" id="items-pool">
+        
+        <!-- Oggetto 1: Paleolitico - Capanna di pelli -->
+        <div class="draggable-item" draggable="true" id="item1" data-era="zone-paleolitico">
+            <svg viewBox="0 0 100 100">
+                <path d="M50 10 L20 80 L80 80 Z" fill="#8B4513" stroke="#5C3A21" stroke-width="4"/>
+                <path d="M50 10 L50 80" stroke="#5C3A21" stroke-width="2" stroke-dasharray="4,4"/>
+                <path d="M40 80 L50 60 L60 80 Z" fill="#3E2723"/>
+            </svg>
+            <span>Capanna smontabile</span>
+        </div>
+
+        <!-- Oggetto 2: Neolitico - Agricoltura -->
+        <div class="draggable-item" draggable="true" id="item2" data-era="zone-neolitico">
+            <svg viewBox="0 0 100 100">
+                <path d="M50 90 L50 20" stroke="#4CAF50" stroke-width="4" fill="none"/>
+                <path d="M50 40 Q40 30 50 20 Q60 30 50 40" fill="#FFC107"/>
+                <path d="M50 55 Q35 45 50 35 Q65 45 50 55" fill="#FFC107"/>
+                <path d="M50 70 Q30 60 50 50 Q70 60 50 70" fill="#FFC107"/>
+            </svg>
+            <span>Agricoltura</span>
+        </div>
+
+        <!-- Oggetto 3: Paleolitico - Caccia (Omino + Mammut) -->
+        <div class="draggable-item" draggable="true" id="item3" data-era="zone-paleolitico">
+            <svg viewBox="0 0 100 100">
+                <!-- Omino -->
+                <circle cx="20" cy="40" r="5" fill="#333"/>
+                <line x1="20" y1="45" x2="20" y2="65" stroke="#333" stroke-width="2"/>
+                <line x1="20" y1="50" x2="40" y2="45" stroke="#333" stroke-width="2"/>
+                <line x1="10" y1="75" x2="20" y2="65" stroke="#333" stroke-width="2"/>
+                <line x1="30" y1="75" x2="20" y2="65" stroke="#333" stroke-width="2"/>
+                <!-- Lancia -->
+                <line x1="15" y1="50" x2="55" y2="35" stroke="#795548" stroke-width="2"/>
+                <!-- Mammut stilizzato -->
+                <ellipse cx="70" cy="55" rx="20" ry="15" fill="#795548"/>
+                <circle cx="60" cy="45" r="10" fill="#795548"/>
+                <path d="M50 45 Q40 55 45 70" fill="none" stroke="#795548" stroke-width="4"/> <!-- proboscide -->
+                <path d="M55 45 Q45 40 40 35" fill="none" stroke="#FFF" stroke-width="2"/> <!-- zanna -->
+                <line x1="65" y1="70" x2="65" y2="80" stroke="#795548" stroke-width="6"/>
+                <line x1="75" y1="70" x2="75" y2="80" stroke="#795548" stroke-width="6"/>
+            </svg>
+            <span>Caccia grossa</span>
+        </div>
+
+        <!-- Oggetto 4: Neolitico - Vaso Ceramica -->
+        <div class="draggable-item" draggable="true" id="item4" data-era="zone-neolitico">
+            <svg viewBox="0 0 100 100">
+                <path d="M35 30 L65 30 L60 40 C 80 50, 80 80, 50 80 C 20 80, 20 50, 40 40 Z" fill="#D84315" stroke="#BF360C" stroke-width="2"/>
+                <ellipse cx="50" cy="30" rx="15" ry="5" fill="#BF360C"/>
+                <!-- Decorazione a zig zag -->
+                <path d="M30 60 L40 50 L50 60 L60 50 L70 60" stroke="#FFCC80" stroke-width="2" fill="none"/>
+            </svg>
+            <span>Vaso di ceramica</span>
+        </div>
+        
+    </div>
+
+    <script>
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const pool = document.getElementById('items-pool');
+
+        // Aggiungiamo gli eventi a tutti gli oggetti trascinabili
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+                // Salviamo l'id dell'oggetto che stiamo trascinando
+                event.dataTransfer.setData('text/plain', draggable.id);
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        // Aggiungiamo gli eventi alle zone di destinazione (Paleolitico / Neolitico)
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault(); // Necessario per permettere il drop
+                zone.classList.add('dragover');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('dragover');
+            });
+
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('dragover');
+                
+                const id = event.dataTransfer.getData('text/plain');
+                const draggableElement = document.getElementById(id);
+                
+                // CONTROLLO LA RISPOSTA!
+                // L'attributo data-era dell'oggetto deve coincidere con l'id della drop-zone
+                if (draggableElement.dataset.era === zone.id) {
+                    // Risposta Esatta!
+                    draggableElement.setAttribute('draggable', 'false'); // Non si muove più
+                    zone.appendChild(draggableElement);
+                    
+                    // Controlla se abbiamo finito
+                    if(pool.children.length === 0) {
+                        setTimeout(() => alert("Bravissimo! Hai completato la verifica! 🎉"), 300);
+                    }
+                } else {
+                    // Risposta Sbagliata!
+                    draggableElement.style.borderColor = "red";
+                    draggableElement.style.transform = "translateX(10px)";
+                    setTimeout(() => {
+                        draggableElement.style.borderColor = "#ddd";
+                        draggableElement.style.transform = "none";
+                    }, 500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+"""
+
+# Inietta l'HTML dentro Streamlit
+# Height 800 garantisce che ci sia abbastanza spazio in verticale per trascinare le cose
+components.html(custom_html, height=800, scrolling=False)
+
+st.markdown("---")
+st.markdown("*App in fase di sviluppo. Questa è una dimostrazione del motore di gioco.*")
