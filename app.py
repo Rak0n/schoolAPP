@@ -25,20 +25,21 @@ custom_html = """
             display: flex;
             flex-direction: column;
             align-items: center;
+            zoom: 0.75; /* Aggiunto: Riduce la visuale al 75% simulando il browser */
         }
 
         .game-board {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-width: 1200px;
-            margin-bottom: 20px;
+            max-width: 1000px;
+            margin-bottom: 40px;
         }
 
         /* Le due zone in cui trascinare gli oggetti */
         .drop-zone {
-            width: 75%;
-            min-height: 280px;
+            width: 48%;
+            min-height: 450px;
             background-color: #ffffff;
             border: 4px dashed #ccc;
             border-radius: 20px;
@@ -87,7 +88,7 @@ custom_html = """
         /* Area contenitore degli oggetti da smistare */
         .items-pool {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             background-color: #fff9c4;
             border: 4px solid #fbc02d;
             border-radius: 20px;
@@ -174,7 +175,8 @@ custom_html = """
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            align-items: center;
+            align-items: flex-start; /* Sposta il popup in alto invece che al centro */
+            padding-top: 80px; /* Distanza dal bordo superiore dello schermo */
             justify-content: center;
         }
 
@@ -600,8 +602,8 @@ json_curiosita = json.dumps(testi_curiosita)
 html_with_data = custom_html.replace('/*CURIOSITA_JSON_PLACEHOLDER*/', json_curiosita)
 
 # Inietta l'HTML dentro Streamlit
-# Height 1200 GARANTISCE che ci sia tantissimo spazio in verticale per tutti gli oggetti!
-components.html(html_with_data, height=1200, scrolling=False)
+# Height ridotto a 900 perché con lo zoom al 75% occupa meno spazio in verticale
+components.html(html_with_data, height=900, scrolling=False)
 
 st.markdown("---")
 st.markdown("*Clicca sugli oggetti una volta posizionati correttamente per scoprire le curiosità!*")
