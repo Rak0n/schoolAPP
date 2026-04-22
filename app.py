@@ -1,5 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import json
+from curiosita import testi_curiosita  # Importiamo il nuovo file!
 
 # Configurazione della pagina Streamlit
 st.set_page_config(page_title="Verifica: Paleolitico e Neolitico", layout="wide")
@@ -8,7 +10,6 @@ st.title("🏹 Scopriamo la Preistoria!")
 st.markdown("Trascina gli oggetti e le abitudini nel periodo storico corretto. Aiuta l'uomo del Paleolitico e la donna del Neolitico a ritrovare le loro cose!")
 
 # === IL CUORE DEL GIOCO: HTML, CSS e JS INIETTATI ===
-# Usiamo una stringa multi-linea per contenere tutto il frontend del gioco
 custom_html = """
 <!DOCTYPE html>
 <html>
@@ -30,21 +31,21 @@ custom_html = """
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-width: 900px;
-            margin-bottom: 30px;
+            max-width: 1000px; /* Allargato per fare più spazio */
+            margin-bottom: 40px;
         }
 
         /* Le due zone in cui trascinare gli oggetti */
         .drop-zone {
-            width: 45%;
-            min-height: 350px;
+            width: 48%; /* Aumentato lo spazio interno */
+            min-height: 450px; /* Aumentato l'altezza per contenere i drop */
             background-color: #ffffff;
             border: 4px dashed #ccc;
             border-radius: 20px;
             padding: 15px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap; /* Permette agli oggetti di andare a capo */
+            align-content: flex-start;
             transition: all 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
@@ -62,6 +63,7 @@ custom_html = """
             padding-bottom: 15px;
             border-bottom: 2px solid #eee;
             width: 100%;
+            display: block; /* Mantiene l'intestazione sopra agli oggetti draggati */
         }
 
         .character-header h2 {
@@ -71,11 +73,11 @@ custom_html = """
         }
 
         .char-placeholder {
-            font-size: 50px;
+            font-size: 60px; /* Icone più grandi */
             background: #f1f1f1;
             border-radius: 50%;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -85,32 +87,33 @@ custom_html = """
         /* Area contenitore degli oggetti da smistare */
         .items-pool {
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             background-color: #fff9c4;
             border: 4px solid #fbc02d;
             border-radius: 20px;
-            padding: 20px;
+            padding: 30px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            min-height: 150px;
+            gap: 20px;
+            min-height: 250px; /* Più spazio in basso */
         }
 
         /* Il singolo oggetto trascinabile */
         .draggable-item {
             background-color: white;
-            border: 2px solid #ddd;
+            border: 3px solid #ddd;
             border-radius: 12px;
             padding: 10px;
-            width: 120px;
+            width: 130px; /* Leggermente più larghi */
             text-align: center;
             cursor: grab;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
 
         .draggable-item:active {
@@ -123,48 +126,107 @@ custom_html = """
         }
 
         .draggable-item svg {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             margin-bottom: 8px;
         }
 
         .draggable-item span {
-            font-size: 14px;
+            font-size: 15px;
             color: #444;
             line-height: 1.2;
         }
 
+        /* Quando l'oggetto è posizionato correttamente */
         .drop-zone .draggable-item {
-            margin: 5px;
-            display: inline-flex;
-            cursor: default;
-            transform: none;
+            margin: 8px;
+            cursor: pointer; /* Diventa cliccabile! */
             border-color: #4CAF50;
             background-color: #f1f8e9;
+        }
+        
+        /* Simbolino che indica che si può cliccare */
+        .drop-zone .draggable-item::after {
+            content: "💡Clicca!";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #FFEB3B;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 12px;
+            border: 2px solid #FBC02D;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* STILE DEL POP-UP (MODAL) CURIOSITA' */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            border: 5px solid #2196F3;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: popin 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popin {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #f44336;
+            cursor: pointer;
+        }
+
+        .modal-content h3 {
+            color: #FF9800;
+            font-size: 28px;
+            margin-top: 0;
+        }
+
+        .modal-content p {
+            font-size: 20px;
+            color: #444;
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-board">
-        <!-- Zona Paleolitico -->
-        <div class="drop-zone" id="zone-paleolitico">
-            <div class="character-header">
-                <div class="char-placeholder">🧔🏽‍♂️</div>
-                <h2>Paleolitico</h2>
-                <small>Età della pietra antica</small>
-            </div>
-            <!-- Gli oggetti corretti verranno spostati qui da JS -->
-        </div>
-
-        <!-- Zona Neolitico -->
-        <div class="drop-zone" id="zone-neolitico">
-            <div class="character-header">
-                <div class="char-placeholder">👩🏽‍🦱</div>
-                <h2>Neolitico</h2>
-                <small>Età della pietra nuova</small>
-            </div>
-            <!-- Gli oggetti corretti verranno spostati qui da JS -->
+    <!-- IL POP-UP LO SAPEVI CHE -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3>✨ Lo sapevi che? ✨</h3>
+            <p id="modal-text">Qui andrà la curiosità...</p>
         </div>
     </div>
 
@@ -317,10 +379,32 @@ custom_html = """
         
     </div>
 
+    <!-- Injectiamo i dati Python in Javascript tramite JSON -->
+    <script id="curiosita-data" type="application/json">
+        /*CURIOSITA_JSON_PLACEHOLDER*/
+    </script>
+
     <script>
+        // Leggiamo i dati dal tag script iniettato da Python
+        const rawData = document.getElementById('curiosita-data').textContent;
+        const curiositaData = JSON.parse(rawData);
+
         const draggables = document.querySelectorAll('.draggable-item');
         const dropZones = document.querySelectorAll('.drop-zone');
         const pool = document.getElementById('items-pool');
+        const modal = document.getElementById('info-modal');
+        const modalText = document.getElementById('modal-text');
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Se clicchi fuori dal modal si chiude
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
 
         // Aggiungiamo gli eventi a tutti gli oggetti trascinabili
         draggables.forEach(draggable => {
@@ -332,6 +416,17 @@ custom_html = """
 
             draggable.addEventListener('dragend', () => {
                 draggable.classList.remove('dragging');
+            });
+            
+            // Aggiungiamo il click per il popup (funzionerà solo quando l'oggetto è in zona corretta)
+            draggable.addEventListener('click', () => {
+                // Se l'oggetto non è più nel div iniziale (pool) ma in una drop zone
+                if (draggable.parentElement.classList.contains('drop-zone')) {
+                    // Prendi il testo associato al suo ID dal dizionario Python
+                    const testo = curiositaData[draggable.id];
+                    modalText.innerText = testo;
+                    modal.style.display = "flex";
+                }
             });
         });
 
@@ -354,7 +449,6 @@ custom_html = """
                 const draggableElement = document.getElementById(id);
                 
                 // CONTROLLO LA RISPOSTA!
-                // L'attributo data-era dell'oggetto deve coincidere con l'id della drop-zone
                 if (draggableElement.dataset.era === zone.id) {
                     // Risposta Esatta!
                     draggableElement.setAttribute('draggable', 'false'); // Non si muove più
@@ -362,7 +456,7 @@ custom_html = """
                     
                     // Controlla se abbiamo finito
                     if(pool.children.length === 0) {
-                        setTimeout(() => alert("Bravissimo! Hai completato la verifica! 🎉"), 300);
+                        setTimeout(() => alert("Bravissimo! Hai completato la verifica! Riguarda tutte le curiosità! 🎉"), 500);
                     }
                 } else {
                     // Risposta Sbagliata!
@@ -380,9 +474,15 @@ custom_html = """
 </html>
 """
 
+# Convertiamo il dizionario Python in una stringa JSON
+json_curiosita = json.dumps(testi_curiosita)
+
+# Sostituiamo il segnaposto nell'HTML con i dati JSON reali
+html_with_data = custom_html.replace('/*CURIOSITA_JSON_PLACEHOLDER*/', json_curiosita)
+
 # Inietta l'HTML dentro Streamlit
-# Height 800 garantisce che ci sia abbastanza spazio in verticale per trascinare le cose
-components.html(custom_html, height=800, scrolling=False)
+# Height 1200 GARANTISCE che ci sia tantissimo spazio in verticale per tutti gli oggetti!
+components.html(html_with_data, height=1200, scrolling=False)
 
 st.markdown("---")
-st.markdown("*App in fase di sviluppo. Questa è una dimostrazione del motore di gioco.*")
+st.markdown("*Clicca sugli oggetti una volta posizionati correttamente per scoprire le curiosità!*")
