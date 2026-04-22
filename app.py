@@ -25,7 +25,7 @@ custom_html = """
             display: flex;
             flex-direction: column;
             align-items: center;
-            zoom: 0.75; /* Aggiunto: Riduce la visuale al 75% simulando il browser */
+            zoom: 0.70; /* Aggiunto: Riduce la visuale al 75% simulando il browser */
         }
 
         .game-board {
