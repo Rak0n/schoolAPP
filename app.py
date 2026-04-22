@@ -230,6 +230,56 @@ custom_html = """
         </div>
     </div>
 
+    <!-- IL TABELLONE DI GIOCO CON I PERSONAGGI (Ripristinato) -->
+    <div class="game-board">
+        <!-- Zona Paleolitico -->
+        <div class="drop-zone" id="zone-paleolitico">
+            <div class="character-header">
+                <div class="char-placeholder" style="background: transparent;">
+                    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                        <circle cx="50" cy="30" r="20" fill="#5D4037"/>
+                        <circle cx="50" cy="35" r="15" fill="#FFBCA5"/>
+                        <path d="M35 35 Q50 60 65 35 Z" fill="#5D4037"/>
+                        <circle cx="45" cy="32" r="2" fill="#000"/>
+                        <circle cx="55" cy="32" r="2" fill="#000"/>
+                        <path d="M35 50 L65 50 L75 90 L25 90 Z" fill="#8D6E63"/>
+                        <path d="M40 50 L30 90 M60 50 L70 90" stroke="#5D4037" stroke-width="2"/>
+                        <line x1="35" y1="55" x2="15" y2="70" stroke="#FFBCA5" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="65" y1="55" x2="85" y2="70" stroke="#FFBCA5" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="10" y1="90" x2="20" y2="30" stroke="#795548" stroke-width="3"/>
+                        <polygon points="17,30 23,30 20,15" fill="#9E9E9E"/>
+                    </svg>
+                </div>
+                <h2>Paleolitico</h2>
+                <small>Età della pietra antica</small>
+            </div>
+            <!-- Gli oggetti corretti verranno spostati qui da JS -->
+        </div>
+
+        <!-- Zona Neolitico -->
+        <div class="drop-zone" id="zone-neolitico">
+            <div class="character-header">
+                <div class="char-placeholder" style="background: transparent;">
+                    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                        <path d="M35 40 Q50 10 65 40 Z" fill="#424242"/>
+                        <circle cx="50" cy="35" r="15" fill="#FFCCBC"/>
+                        <circle cx="45" cy="35" r="2" fill="#000"/>
+                        <circle cx="55" cy="35" r="2" fill="#000"/>
+                        <path d="M45 42 Q50 45 55 42" stroke="#000" stroke-width="1.5" fill="none"/>
+                        <path d="M35 50 L65 50 L70 90 L30 90 Z" fill="#A5D6A7"/>
+                        <path d="M35 50 Q50 60 65 50" stroke="#81C784" stroke-width="2" fill="none"/>
+                        <line x1="35" y1="55" x2="20" y2="70" stroke="#FFCCBC" stroke-width="5" stroke-linecap="round"/>
+                        <line x1="65" y1="55" x2="80" y2="70" stroke="#FFCCBC" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M70 65 Q80 65 85 75 Q90 85 80 85 L70 85 Q60 85 65 75 Z" fill="#D84315"/>
+                    </svg>
+                </div>
+                <h2>Neolitico</h2>
+                <small>Età della pietra nuova</small>
+            </div>
+            <!-- Gli oggetti corretti verranno spostati qui da JS -->
+        </div>
+    </div>
+
     <h3 style="color: #666; margin-bottom: 10px;">Scatola degli oggetti (Trascinali su!)</h3>
     
     <!-- Zona Oggetti Iniziali -->
@@ -365,16 +415,29 @@ custom_html = """
             <span>Rifugio in grotta</span>
         </div>
 
-        <!-- NEOLITICO: Villaggio -->
+        <!-- NEOLITICO: Villaggio (Case di Mattoni) -->
         <div class="draggable-item" draggable="true" id="item_neo_6" data-era="zone-neolitico">
             <svg viewBox="0 0 100 100">
-                <path d="M20 55 L40 55 L40 80 L20 80 Z" fill="#D7CCC8"/>
-                <path d="M15 55 L30 35 L45 55 Z" fill="#8D6E63"/>
-                <path d="M60 45 L80 45 L80 80 L60 80 Z" fill="#D7CCC8"/>
-                <path d="M55 45 L70 25 L85 45 Z" fill="#8D6E63"/>
-                <line x1="5" y1="85" x2="95" y2="85" stroke="#795548" stroke-width="3" stroke-dasharray="10 5"/>
+                <rect x="10" y="50" width="35" height="35" fill="#E0E0E0" stroke="#9E9E9E" stroke-width="2"/>
+                <line x1="10" y1="60" x2="45" y2="60" stroke="#9E9E9E" stroke-width="1.5"/>
+                <line x1="10" y1="70" x2="45" y2="70" stroke="#9E9E9E" stroke-width="1.5"/>
+                <line x1="10" y1="80" x2="45" y2="80" stroke="#9E9E9E" stroke-width="1.5"/>
+                <line x1="20" y1="50" x2="20" y2="85" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="10 10"/>
+                <line x1="35" y1="55" x2="35" y2="85" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="10 10"/>
+                <rect x="22" y="65" width="10" height="20" fill="#795548"/>
+                <path d="M5 50 L50 50 L50 45 L5 45 Z" fill="#8D6E63"/>
+
+                <rect x="48" y="40" width="45" height="45" fill="#E0E0E0" stroke="#9E9E9E" stroke-width="2"/>
+                <line x1="48" y1="50" x2="93" y2="50" stroke="#9E9E9E" stroke-width="1.5"/>
+                <line x1="48" y1="60" x2="93" y2="60" stroke="#9E9E9E" stroke-width="1.5"/>
+                <line x1="48" y1="70" x2="93" y2="70" stroke="#9E9E9E" stroke-width="1.5"/>
+                <line x1="48" y1="80" x2="93" y2="80" stroke="#9E9E9E" stroke-width="1.5"/>
+                <line x1="60" y1="40" x2="60" y2="85" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="10 10"/>
+                <line x1="75" y1="45" x2="75" y2="85" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="10 10"/>
+                <rect x="65" y="65" width="12" height="20" fill="#5D4037"/>
+                <path d="M43 40 L98 40 L98 35 L43 35 Z" fill="#8D6E63"/>
             </svg>
-            <span>Villaggio fisso</span>
+            <span>Villaggio in mattoni</span>
         </div>
         
     </div>
