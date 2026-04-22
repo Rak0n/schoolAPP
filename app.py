@@ -31,7 +31,7 @@ custom_html = """
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
             margin-bottom: 20px;
         }
 
