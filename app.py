@@ -38,7 +38,7 @@ custom_html = """
         /* Le due zone in cui trascinare gli oggetti */
         .drop-zone {
             width: 48%;
-            min-height: 450px;
+            min-height: 280px;
             background-color: #ffffff;
             border: 4px dashed #ccc;
             border-radius: 20px;
